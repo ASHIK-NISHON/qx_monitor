@@ -72,11 +72,26 @@ export default function Settings() {
       token: t.token,
       amount: parseInt(thresholdInputs[t.token]) || t.amount,
     }));
-    setWhaleThresholds(newThresholds);
-    
-    // Save default threshold for other tokens
-    const defaultAmount = parseInt(defaultThresholdInput);
-    if (!isNaN(defaultAmount) && defaultAmount > 0) {
+
+    // Only update per-token thresholds if they actually changed
+    const tokenThresholdsChanged =
+      newThresholds.length !== whaleThresholds.length ||
+      newThresholds.some(
+        (t, i) =>
+          whaleThresholds[i]?.token !== t.token ||
+          whaleThresholds[i]?.amount !== t.amount
+      );
+    if (tokenThresholdsChanged) {
+      setWhaleThresholds(newThresholds);
+    }
+
+    // Only update default threshold for other tokens if it actually changed
+    const defaultAmount = parseInt(defaultThresholdInput, 10);
+    if (
+      !isNaN(defaultAmount) &&
+      defaultAmount > 0 &&
+      defaultAmount !== defaultThreshold
+    ) {
       setDefaultThreshold(defaultAmount);
     }
   };
