@@ -1,0 +1,4 @@
+project_id = "axwhxguedyghodmsoohk"
+
+[functions.qx-webhook]
+verify_jwt = false
