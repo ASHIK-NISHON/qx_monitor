@@ -25,7 +25,7 @@ import {
 import { shortenAddress } from "@/data/events";
 import { EventDetailDialog } from "@/components/EventDetailDialog";
 import { useWhaleDetection, parseAmount } from "@/hooks/useWhaleDetection";
-import { useQxEvents } from "@/hooks/useQxEvents";
+import { useAllQxEvents } from "@/hooks/useQxEvents";
 import { useKPIStats } from "@/hooks/useKPIStats";
 import { useUniqueTokens } from "@/hooks/useUniqueTokens";
 import { DisplayEvent } from "@/types/qxEvent";
@@ -70,8 +70,8 @@ export default function Overview() {
   const prevWhaleCountRef = useRef<number | null>(null);
   const uniqueTokens = useUniqueTokens();
 
-  // Fetch more events so the all-time chart aligns with KPI totals
-  const { data: events = [], isLoading: eventsLoading } = useQxEvents(0, 1000);
+  // Fetch ALL events so the Events Over Time chart and filters show full history (not capped at 1000)
+  const { data: events = [], isLoading: eventsLoading } = useAllQxEvents();
   const { data: kpiStats } = useKPIStats();
 
   // Detect whale events
