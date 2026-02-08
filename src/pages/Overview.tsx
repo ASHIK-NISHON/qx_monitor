@@ -338,51 +338,57 @@ export default function Overview() {
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-center justify-between p-4 rounded-lg bg-background/30 border border-border hover:border-primary/30 transition-smooth cursor-pointer"
+                    className="flex flex-col md:flex-row md:items-center md:justify-between p-3 md:p-4 rounded-lg bg-background/30 border border-border hover:border-primary/30 transition-smooth cursor-pointer gap-3 md:gap-4"
                   >
-                    <div className="flex items-center gap-4 flex-1">
-                      <Badge variant={getEventBadgeVariant(event.type)}>
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 flex-1 min-w-0">
+                      <Badge variant={getEventBadgeVariant(event.type)} className="flex-shrink-0">
                         {getEventTypeLabel(event.type)}
                       </Badge>
                       {detectWhaleInEvent(event) && (
                         <Badge
                           variant="outline"
-                          className="text-xs border-amber-500/50 text-amber-500 bg-amber-500/10"
+                          className="text-xs border-amber-500/50 text-amber-500 bg-amber-500/10 flex-shrink-0"
                         >
                           🐋 Whale
                         </Badge>
                       )}
-                      <span className="font-mono text-sm text-muted-foreground">
+                      <span className="font-mono text-xs md:text-sm text-muted-foreground flex-shrink-0">
                         {event.token}
                       </span>
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="font-mono text-foreground">
+                      <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm min-w-0">
+                        <span className="font-mono text-foreground truncate">
                           {shortenAddress(event.from)}
                         </span>
                         {event.type === "AddToBidOrder" ? (
-                          <ArrowUpRight className="w-4 h-4 text-success" />
+                          <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 text-success flex-shrink-0" />
                         ) : (
-                          <ArrowDownRight className="w-4 h-4 text-muted-foreground" />
+                          <ArrowDownRight className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground flex-shrink-0" />
                         )}
-                        <span className="font-mono text-foreground">
+                        <span className="font-mono text-foreground truncate">
                           {shortenAddress(event.to)}
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-mono font-semibold text-foreground">
-                        {event.amount}
-                      </span>
-                      <span className="text-sm text-muted-foreground w-20 text-right">
-                        {event.time}
-                      </span>
-                      <div className="flex flex-col items-end gap-1 min-w-[120px]">
-                        <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                          Tick no
+                    <div className="flex items-center gap-2 md:gap-4 justify-between md:justify-end flex-wrap md:flex-nowrap">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs text-muted-foreground md:hidden">Amount</span>
+                        <span className="font-mono text-sm md:text-base font-semibold text-foreground">
+                          {event.amount}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1 text-right">
+                        <span className="text-xs text-muted-foreground md:hidden">Time</span>
+                        <span className="text-xs md:text-sm text-muted-foreground">
+                          {event.time}
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <span className="text-[10px] md:text-[11px] uppercase tracking-wide text-muted-foreground">
+                          Tick
                         </span>
                         <Badge
                           variant="outline"
-                          className="text-xs border-primary/30 text-primary"
+                          className="text-xs border-primary/30 text-primary whitespace-nowrap"
                         >
                           {event.tickNo}
                         </Badge>
@@ -424,12 +430,12 @@ export default function Overview() {
                   topWallets.map((wallet, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 rounded-lg bg-background/30 border border-border"
+                      className="flex flex-col md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-background/30 border border-border gap-2"
                     >
-                      <span className="font-mono text-sm text-foreground">
+                      <span className="font-mono text-sm text-foreground break-all md:break-normal">
                         {shortenAddress(wallet.address)}
                       </span>
-                      <span className="font-mono font-semibold text-primary">
+                      <span className="font-mono font-semibold text-primary flex-shrink-0">
                         {wallet.volume}
                       </span>
                     </div>
@@ -460,23 +466,23 @@ export default function Overview() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <div className="flex justify-between">
+                  <div className="flex flex-col md:flex-row md:justify-between gap-1 md:gap-0">
                     <span className="text-sm text-muted-foreground">Wallet</span>
-                    <span className="font-mono text-sm text-foreground">
+                    <span className="font-mono text-sm text-foreground break-all md:break-normal">
                       {shortenAddress(displayWhale.from)}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col md:flex-row md:justify-between gap-1 md:gap-0">
                     <span className="text-sm text-muted-foreground">Type</span>
                     <Badge variant="default">{getEventTypeLabel(displayWhale.type)}</Badge>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col md:flex-row md:justify-between gap-1 md:gap-0">
                     <span className="text-sm text-muted-foreground">Amount</span>
                     <span className="font-mono font-semibold text-primary">
                       {displayWhale.amount}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col md:flex-row md:justify-between gap-1 md:gap-0">
                     <span className="text-sm text-muted-foreground">Time</span>
                     <span className="text-sm text-foreground">{displayWhale.time}</span>
                   </div>
