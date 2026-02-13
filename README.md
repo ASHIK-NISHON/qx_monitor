@@ -222,9 +222,7 @@ supabase/
 ---
 
 
-**QX Monitor** demo: https://qx-console.vercel.app/  
-*Optimized for desktop. Live demo receives updates via EasyConnect.*
+**QX Monitor** demo:  https://qx-monitor.vercel.app/ 
+*Live demo receives updates via EasyConnect.*
 
 ---
-
-**Built for admins and developers** ❤️
