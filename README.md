@@ -114,54 +114,6 @@ QX Monitor tracks these QX smart contract operations:
 | `IssueAsset` | Create a new asset |
 
 
-## Setup & Installation
-
-### Prerequisites
-- Node.js 18+
-- Supabase account
-
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ASHIK-NISHON/QX-console.git
-   cd QX-console
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open the app**
-   Navigate to `http://localhost:8080`
-
-### Environment Configuration
-
-Create a `.env` file in the root directory with your Supabase credentials:
-
-```env
-VITE_SUPABASE_URL=your-supabase-project-url
-VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-key
-```
-
-Replace the placeholders with your actual Supabase project URL and anonymous/public key. You can find these in your Supabase project settings under API.
-
-
-## Webhook Integration
-
-Events are sent directly from **EasyConnect** to the Supabase Edge Function. Configure EasyConnect to POST to your webhook URL.
-
-### Edge Function Endpoint
-```
-POST https://<your-project-ref>.supabase.co/functions/v1/qx-webhook
-```
-
 ### Expected Payload (EasyConnect format)
 The webhook expects events in the nested structure sent by EasyConnect, for example:
 - **Root**: `ProcedureTypeValue`, `ProcedureTypeName`
