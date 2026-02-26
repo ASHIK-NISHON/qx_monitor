@@ -74,14 +74,26 @@ export default function Events() {
     return isWhale(event.token, amount);
   };
 
-  // Check if user is searching or filtering
-  const hasSearchOrFilter = searchQuery.trim() || tokenFilter !== 'all-tokens' || typeFilter !== 'all-types';
+  const isWhaleFilterActive = typeFilter === "whale";
+  const isTimeFilterActive = timeFilter !== "all";
+
+  // Check if user is searching or filtering (including time filter)
+  const hasSearchOrFilter = Boolean(
+    searchQuery.trim() ||
+    tokenFilter !== "all-tokens" ||
+    typeFilter !== "all-types" ||
+    isTimeFilterActive
+  );
   
   // Whale filter is client-side only, so we shouldn't use search hook for it
-  const hasServerFilter = searchQuery.trim() || tokenFilter !== 'all-tokens' || (typeFilter !== 'all-types' && typeFilter !== 'whale');
-  const isWhaleFilterActive = typeFilter === 'whale';
-  const isTimeFilterActive = timeFilter !== "all";
-  // If time filter is active without server-side filters, we need all events for client-side filtering
+  const hasServerFilter = Boolean(
+    searchQuery.trim() ||
+    tokenFilter !== "all-tokens" ||
+    (typeFilter !== "all-types" && !isWhaleFilterActive)
+  );
+
+  // If time filter is active without server-side filters, or whale filter is active,
+  // we need all events for client-side filtering
   const needsAllEvents = isWhaleFilterActive || (isTimeFilterActive && !hasServerFilter);
 
   // Get counts
@@ -108,6 +120,9 @@ export default function Events() {
     isLoading = result.isLoading;
   }
 
+  // When using all events, server-side filters (search/token/type) have not been applied yet
+  const hasServerAppliedFilters = !needsAllEvents && hasServerFilter;
+
   // Reset page to 0 when filters change
   useEffect(() => {
     setPageIndex(0);
@@ -120,7 +135,7 @@ export default function Events() {
   // Filter events based on search, token, time, and whale filters (client-side)
   let filteredEvents = events.filter((event) => {
     // Search filter (if not already applied server-side)
-    if (!hasServerFilter && searchQuery.trim()) {
+    if (!hasServerAppliedFilters && searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       const matchesFrom = event.from.toLowerCase().includes(query);
       const matchesTo = event.to.toLowerCase().includes(query);
@@ -132,7 +147,7 @@ export default function Events() {
     }
 
     // Token filter (if not already applied server-side)
-    if (!hasServerFilter && tokenFilter !== "all-tokens") {
+    if (!hasServerAppliedFilters && tokenFilter !== "all-tokens") {
       const filterToken = String(tokenFilter).toUpperCase();
       if (event.token.toUpperCase() !== filterToken) {
         return false;
@@ -216,7 +231,7 @@ export default function Events() {
             </span>
             {hasSearchOrFilter && (
               <span className="text-sm font-normal text-muted-foreground ml-2">
-                • {isWhaleFilterActive ? filteredEvents.length.toLocaleString() : filteredCount.toLocaleString()} results
+                • {displayCount.toLocaleString()} results
               </span>
             )}
           </CardTitle>
