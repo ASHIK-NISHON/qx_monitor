@@ -240,7 +240,7 @@ export default function Events() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search address, token, or tick no..."
+                  placeholder="Search address or tick no..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 bg-background/50 border-border text-sm"
