@@ -4,20 +4,11 @@ import { toast } from "@/hooks/use-toast";
 import { KPICard } from "@/components/KPICard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Activity,
   Wallet,
   Fish,
   Sparkles,
-  Search,
   ArrowUpRight,
   ArrowDownRight,
   Loader2,
@@ -62,13 +53,8 @@ function getEventTypeLabel(type: string) {
 export default function Overview() {
   const [selectedEvent, setSelectedEvent] = useState<DisplayEvent | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [tokenFilter, setTokenFilter] = useState("all-tokens");
-  const [typeFilter, setTypeFilter] = useState("all-types");
-  const [timeFilter, setTimeFilter] = useState("all");
   const { isWhale, whaleThresholds } = useWhaleDetection();
   const prevWhaleCountRef = useRef<number | null>(null);
-  const uniqueTokens = useUniqueTokens();
 
   // Fetch ALL events so the Events Over Time chart and filters show full history (not capped at 1000)
   const { data: events = [], isLoading: eventsLoading } = useAllQxEvents();
@@ -111,57 +97,10 @@ export default function Overview() {
     setDialogOpen(true);
   };
 
-  // Filter events based on search and filters
-  const filteredEvents = events.filter((event) => {
-    const query = searchQuery.toLowerCase().trim();
-    if (query) {
-      const matchesFrom = event.from.toLowerCase().includes(query);
-      const matchesTo = event.to.toLowerCase().includes(query);
-      const matchesTick = event.tickNo.replace(/,/g, "").includes(query.replace(/,/g, ""));
-      const matchesToken = event.token.toLowerCase().includes(query);
-      if (!matchesFrom && !matchesTo && !matchesTick && !matchesToken) {
-        return false;
-      }
-    }
+  // For overview we show the most recent live events without extra search/filters
+  const filteredEvents = events;
 
-    // Token filter
-    if (tokenFilter !== "all-tokens") {
-      if (event.token.toUpperCase() !== tokenFilter.toUpperCase()) {
-        return false;
-      }
-    }
-
-    if (typeFilter !== "all-types") {
-      if (typeFilter === "whale") {
-        if (!detectWhaleInEvent(event)) {
-          return false;
-        }
-      } else {
-        const typeMap: Record<string, string> = {
-          bid: "AddToBidOrder",
-          ask: "AddToAskOrder",
-          transfer: "TransferShareOwnershipAndPossession",
-          issue: "IssueAsset",
-        };
-        if (event.type !== typeMap[typeFilter]) {
-          return false;
-        }
-      }
-    }
-
-    if (timeFilter !== "all") {
-      const time = event.time.toLowerCase();
-      if (timeFilter === "1h" && !time.includes("min") && !time.includes("just")) {
-        return false;
-      } else if (timeFilter === "24h" && (time.includes("day") || time.includes("week"))) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-  // Filtered whale events (matches the current filters/search)
+  // Filtered whale events (matches the current view)
   const filteredWhaleEvents = useMemo(() => {
     return filteredEvents.filter((event) => detectWhaleInEvent(event));
   }, [filteredEvents, detectWhaleInEvent]);
@@ -272,56 +211,6 @@ export default function Overview() {
         <Card className="lg:col-span-2 gradient-card border-border">
           <CardHeader>
             <CardTitle className="text-xl">Live QX Events</CardTitle>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 mt-4">
-              <div className="flex-1 min-w-0 sm:min-w-[200px]">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search address, token, or tick no..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-background/50 border-border text-sm"
-                  />
-                </div>
-              </div>
-              <Select value={tokenFilter} onValueChange={setTokenFilter}>
-                <SelectTrigger className="w-full sm:w-[140px] bg-background/50 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px]">
-                  <SelectItem value="all-tokens">All Tokens</SelectItem>
-                  {uniqueTokens.map((token) => (
-                    <SelectItem key={token} value={token.toLowerCase()}>
-                      {token}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full sm:w-[140px] bg-background/50 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all-types">All Types</SelectItem>
-                  <SelectItem value="whale">🐋 Whale</SelectItem>
-                  <SelectItem value="bid">Bid Order</SelectItem>
-                  <SelectItem value="ask">Ask Order</SelectItem>
-                  <SelectItem value="transfer">Transfer</SelectItem>
-                  <SelectItem value="issue">Issue Asset</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={timeFilter} onValueChange={setTimeFilter}>
-                <SelectTrigger className="w-full sm:w-[120px] bg-background/50 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Time</SelectItem>
-                  <SelectItem value="1h">Last 1h</SelectItem>
-                  <SelectItem value="24h">Last 24h</SelectItem>
-                  <SelectItem value="7d">Last 7d</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </CardHeader>
           <CardContent>
             {eventsLoading ? (
