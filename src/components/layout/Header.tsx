@@ -1,14 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { User, LogOut } from "lucide-react";
 
 interface HeaderProps {
   title: string;
@@ -32,30 +24,18 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* User Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border border-primary/30">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="bg-primary/10 text-primary">
-                    <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                  </AvatarFallback>
-                </Avatar>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>
-                <User className="w-4 h-4 mr-2" />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Static app badge (no auth) */}
+          <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-background/60 border border-border/60 shadow-sm">
+            <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border border-primary/30">
+              <AvatarImage src="" alt="QX Monitor" />
+              <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm font-medium">
+                QX
+              </AvatarFallback>
+            </Avatar>
+            <div className="hidden sm:flex flex-col leading-tight">
+              <span className="text-xs font-medium text-foreground">QX Monitor</span>
+            </div>
+          </div>
         </div>
       </div>
     </header>
