@@ -174,7 +174,7 @@ supabase/
 
 You can watch a full walkthrough of the app here:
 
-<video src="./walkthrough.mp4" controls width="640">
+<video src="walkthrough.mp4" controls width="640">
   Your browser does not support the video tag. You can download it instead:
   <a href="./walkthrough.mp4">Download PRESENTATION.mp4</a>
 </video>
