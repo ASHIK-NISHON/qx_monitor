@@ -174,13 +174,9 @@ supabase/
 
 You can watch a full walkthrough of the app here:
 
-<video src="walkthrough.mp4" controls width="640">
-  Your browser does not support the video tag. You can download it instead:
-  <a href="./walkthrough.mp4">Download PRESENTATION.mp4</a>
-</video>
+[![Watch the walkthrough](https://img.youtube.com/vi/J4vvWfcl-F4/0.jpg)](https://www.youtube.com/watch?v=J4vvWfcl-F4)
 
 ---
-
 **QX Monitor** demo:  https://qx-monitor.vercel.app/ 
 *Live demo receives updates via EasyConnect.*
 
